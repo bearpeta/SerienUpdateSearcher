@@ -5,11 +5,14 @@
  */
 package updater;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.text.WordUtils;
 import org.w3c.dom.Node;
 
 /**
@@ -80,5 +83,13 @@ public class Controller {
             }
         }
         return series;
+    }
+    
+    public String changeToUpperCase(String serie) {
+        return WordUtils.capitalize(serie);
+    }
+    
+    public List<String> readAlreadyDownloadedFile(File alreadyDownloadedFile) throws IOException { 
+        return new InputReader().readInput(alreadyDownloadedFile);
     }
 }

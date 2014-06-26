@@ -24,7 +24,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.ParserConfigurationException;
-import org.apache.commons.lang3.text.WordUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,6 +41,7 @@ public class UpdaterGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form UpdaterGUI
+     *
      * @throws java.io.IOException
      */
     public UpdaterGUI() throws IOException {
@@ -49,9 +49,9 @@ public class UpdaterGUI extends javax.swing.JFrame {
         reader = new InputReader();
         controller = Controller.getInstance();
         serieListFile = new File("serienFile.txt");
-        alreadyDownloadedFile = new File ("alreadyDownloaded.txt");
+        alreadyDownloadedFile = new File("alreadyDownloaded.txt");
         initComponents();
-        readAlreadyDownloadedFile();
+        alreadyDownloadedList = controller.readAlreadyDownloadedFile(alreadyDownloadedFile);
     }
 
     /**
@@ -237,9 +237,9 @@ public class UpdaterGUI extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         try {
 
-             XMLParser.getInstance().readXML(reader.readInput(serieListFile));
-            episodeList =  XMLParser.getInstance().getXMLResult();
-            readAlreadyDownloadedFile();
+            XMLParser.getInstance().readXML(reader.readInput(serieListFile));
+            episodeList = XMLParser.getInstance().getXMLResult();
+            alreadyDownloadedList = controller.readAlreadyDownloadedFile(alreadyDownloadedFile);
             clearTable();
             addToTable();
 
@@ -257,7 +257,7 @@ public class UpdaterGUI extends javax.swing.JFrame {
         modifierFrame.setVisible(true);
         try {
             for (String serie : reader.readInput(serieListFile)) {
-                serie = changeToUpperCase(serie);
+                serie = controller.changeToUpperCase(serie);
                 serieListModel.addElement(serie);
             }
         } catch (IOException ex) {
@@ -340,27 +340,21 @@ public class UpdaterGUI extends javax.swing.JFrame {
 
     private void addToSerieField() {
         if (!addSerieField.getText().isEmpty()) {
-            if (!serieListModel.contains(changeToUpperCase(addSerieField.getText()))) {
-                serieListModel.addElement(changeToUpperCase(addSerieField.getText()));
+            if (!serieListModel.contains(controller.changeToUpperCase(addSerieField.getText()))) {
+                serieListModel.addElement(controller.changeToUpperCase(addSerieField.getText()));
                 addSerieField.selectAll();
             } else {
                 JOptionPane.showMessageDialog(null, "This serie is already in your list", "Exist already", ERROR_MESSAGE);
             }
         }
     }
-    
-    
-    private String changeToUpperCase(String serie) {
-        return WordUtils.capitalize(serie);
-    }
 
-    
     private void addToTable() {
         addRow(controller.deleteDuplicate(episodeList));
         eachSecondRowColor();
         setJLabelCount();
     }
-    
+
     private void addRow(TreeMap<String, String> map) {
 
         for (Entry<String, String> entry : map.entrySet()) {
@@ -384,13 +378,8 @@ public class UpdaterGUI extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void setJLabelCount() {
         jLabelCount.setText("Anzahl: " + EpisodeTable.getRowCount());
-    }
-   
-
-    private void readAlreadyDownloadedFile() throws IOException { 
-        alreadyDownloadedList = reader.readInput(alreadyDownloadedFile);
     }
 }
