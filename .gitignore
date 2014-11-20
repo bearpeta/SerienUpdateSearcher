@@ -7,3 +7,5 @@ dist/Serienupdater.jar
 alreadyDownloaded.txt
 nbproject/private/private.xml
 nbproject/private/private.properties
+/nbproject/private/
+/alreadyDownloaded.txt
