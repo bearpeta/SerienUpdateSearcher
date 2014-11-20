@@ -1,2 +1,9 @@
 /build/
 /serienFile.txt
+dist/lib/beansbinding-1.2.1.jar
+dist/lib/commons-lang3-3.3.2.jar
+dist/README.TXT
+dist/Serienupdater.jar
+alreadyDownloaded.txt
+nbproject/private/private.xml
+nbproject/private/private.properties
